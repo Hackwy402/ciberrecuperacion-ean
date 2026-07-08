@@ -1,0 +1,53 @@
+# =====================================================================
+#  Laboratorio Ciber-Recuperación (92-EAN) — Universidad Ean
+#
+#  Entorno reproducible para los 3 setups del curso. El servicio 'workspace'
+#  (Python con las librerías del curso) es COMÚN a todos. El servicio 'ollama'
+#  (modelo local) es OPCIONAL y solo se activa con el perfil "local".
+#
+#  Uso:
+#    Setup 1 (local con modelo):   docker compose --profile local up -d
+#    Setup 2/3 (cloud, API hosted): docker compose up -d      (sin ollama)
+#
+#  El workspace lee el backend desde tu archivo .env (LLM_BACKEND, etc.).
+# =====================================================================
+
+services:
+  workspace:
+    image: python:3.11-slim
+    container_name: cr-workspace
+    working_dir: /lab
+    volumes:
+      - ./:/lab
+    env_file:
+      - .env               # inyecta LLM_BACKEND / claves / modelo
+    environment:
+      # Si usas Ollama en contenedor (perfil local), el host es el servicio 'ollama'.
+      # Si usas Ollama NATIVO (p.ej. en Mac/host), sobrescribe LLM_BASE_URL en .env.
+      - PYTHONUNBUFFERED=1
+    command: >
+      bash -c "pip install --no-cache-dir -r /lab/requirements.txt &&
+               echo '[OK] Workspace listo. Entra con: docker compose exec workspace bash' &&
+               tail -f /dev/null"
+    restart: unless-stopped
+
+  ollama:
+    image: ollama/ollama:latest
+    container_name: cr-ollama
+    profiles: ["local"]         # SOLO se levanta con --profile local
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama_models:/root/.ollama
+    restart: unless-stopped
+    # ---- GPU NVIDIA (OPCIONAL) — descomenta si tienes toolkit instalado -----
+    # deploy:
+    #   resources:
+    #     reservations:
+    #       devices:
+    #         - driver: nvidia
+    #           count: all
+    #           capabilities: [gpu]
+
+volumes:
+  ollama_models:

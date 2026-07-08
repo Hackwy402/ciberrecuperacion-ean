@@ -1,0 +1,15 @@
+{
+  "id": "ALERT-2026-0001",
+  "timestamp": "2026-08-03T02:14:37-05:00",
+  "host": "srv-fileshare-03",
+  "usuario": "svc_backup",
+  "origen": "Wazuh EDR",
+  "severidad": "alta",
+  "descripcion": "Proceso creo miles de archivos con extension .locked3d en menos de 2 minutos y ejecuto 'vssadmin.exe delete shadows /all /quiet'. Aumento subito de entropia en el volumen D:. El servicio de backup programado fue detenido.",
+  "eventos": [
+    {"pid": 4821, "proceso": "svc_host32.exe", "accion": "escritura masiva de archivos", "detalle": "12.480 archivos renombrados a *.locked3d"},
+    {"pid": 4821, "proceso": "svc_host32.exe", "accion": "ejecucion de comando", "detalle": "vssadmin.exe delete shadows /all /quiet"},
+    {"pid": 4990, "proceso": "wbadmin.exe", "accion": "ejecucion de comando", "detalle": "wbadmin delete catalog -quiet"},
+    {"pid": 4821, "proceso": "svc_host32.exe", "accion": "servicio detenido", "detalle": "Servicio 'VeeamBackupSvc' detenido"}
+  ]
+}

@@ -1,0 +1,18 @@
+# Entorno y secretos
+.venv/
+.env
+*.env.local
+
+# Evidencia real: NUNCA se versiona (chain of custody)
+evidence/*
+!evidence/.gitkeep
+
+# Artefactos Python
+__pycache__/
+*.pyc
+
+# Ollama / datos locales
+ollama_models/
+
+# SO
+.DS_Store

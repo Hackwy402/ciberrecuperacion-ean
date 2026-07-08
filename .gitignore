@@ -1,0 +1,14 @@
+# Entornos y secretos
+**/.venv/
+**/.env
+# Evidencia real: nunca se versiona
+**/evidence/*
+!**/evidence/.gitkeep
+# Python
+**/__pycache__/
+*.pyc
+# SO
+.DS_Store
+
+# Solución del docente: no publicar
+**/SOLUCION-docente.md

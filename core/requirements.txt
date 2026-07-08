@@ -1,0 +1,21 @@
+# Dependencias del laboratorio Ciber-Recuperación (92-EAN)
+# Pineadas para reproducibilidad. Para crecer en próximas sesiones:
+#   1) agrega la librería aquí con su versión,
+#   2) 'make rebuild' (o pip install -r requirements.txt en tu venv).
+# Así el entorno escala sin romper lo ya hecho.
+
+# --- Núcleo (Sesión 1): cliente LLM agnóstico ---
+requests==2.32.3        # llamadas HTTP a cualquier backend compatible con OpenAI
+python-dotenv==1.0.1    # carga de .env
+rich==13.9.4            # salida de consola legible
+
+# --- Análisis de integridad (Sesión 2): se dejan listas desde ya ---
+scikit-learn==1.5.2     # scoring de anomalías
+numpy==2.1.3
+pandas==2.2.3
+
+# --- Reservado para próximas sesiones (descomentar cuando toque) ---
+# pyod==2.0.2           # detección de anomalías (S2)
+# yara-python==4.5.1    # reglas YARA (S3)
+# langchain==0.3.7      # RAG copiloto (S5)
+# chromadb==0.5.20      # vector store (S5)
