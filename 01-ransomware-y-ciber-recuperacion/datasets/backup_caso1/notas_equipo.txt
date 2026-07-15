@@ -1,0 +1,2 @@
+Recordar validar la integridad del respaldo antes de restaurar.
+Ultima prueba de restauracion: hace 6 meses (pendiente repetir).
