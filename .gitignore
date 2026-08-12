@@ -10,6 +10,9 @@
 # SO
 .DS_Store
 
+# Solución del docente: no publicar
+**/SOLUCION-docente.md
+
 # Salidas generadas en los labs
 **/features.csv
 **/scores.csv
