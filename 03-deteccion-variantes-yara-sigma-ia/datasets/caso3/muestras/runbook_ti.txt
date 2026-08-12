@@ -1,0 +1,5 @@
+RUNBOOK TI - Respuesta a ransomware (borrador)
+Si un usuario reporta archivos renombrados y una nota llamada
+LEEME_RESCATE.txt en el escritorio, aislar el equipo de la red,
+NO apagarlo, y avisar al equipo de ciber-recuperacion.
+Verificar si hay copias shadow disponibles con: vssadmin list shadows
