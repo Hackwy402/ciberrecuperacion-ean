@@ -1,0 +1,6 @@
+Politica: validar integridad antes de restaurar.
+RPO=24h RTO=4h.
+Politica: validar integridad antes de restaurar.
+RPO=24h RTO=4h.
+Politica: validar integridad antes de restaurar.
+RPO=24h RTO=4h.

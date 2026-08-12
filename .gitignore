@@ -10,5 +10,16 @@
 # SO
 .DS_Store
 
-# Solución del docente: no publicar
-**/SOLUCION-docente.md
+# Salidas generadas en los labs
+**/features.csv
+**/scores.csv
+**/hallazgos.txt
+
+# Notebook: datasets y salidas temporales
+**/alzheimers_disease_data.csv
+**/dataset_trabajo.csv
+**/dataset_corrupto.csv
+**/simulado_cifrado.bin
+**/*.ipynb_checkpoints/
+**/anom_hist.png
+**/integridad_bar.png

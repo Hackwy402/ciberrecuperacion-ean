@@ -51,6 +51,8 @@ ciberrecuperacion-ean/
 
 - Selección de modelo y hardware: [`docs/modelos-abiertos-y-hardware.md`](docs/modelos-abiertos-y-hardware.md)
 - Regla forense datos → backend: [`docs/matriz-datos-backend.md`](docs/matriz-datos-backend.md)
+- Panorama de herramientas (mercado, nube AWS/Azure y nuestro lab): [`docs/panorama-herramientas-integridad.md`](docs/panorama-herramientas-integridad.md)
+- Backups en la nube (AWS/Azure, herramientas nativas): [`docs/backups-nube-aws-azure.md`](docs/backups-nube-aws-azure.md)
 
 ---
 

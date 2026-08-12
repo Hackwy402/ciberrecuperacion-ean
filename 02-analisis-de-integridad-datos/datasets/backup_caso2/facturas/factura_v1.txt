@@ -1,0 +1,6 @@
+FACTURA #1001
+Cliente: Empresa 1001
+Concepto: servicios de nube
+Subtotal: 8007
+IVA: 1521
+Total: 9528
