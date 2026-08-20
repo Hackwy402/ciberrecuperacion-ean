@@ -1,0 +1,17 @@
+# Imagen mínima de Velociraptor (servidor o cliente) — descarga el binario oficial.
+# amd64 para la EC2. Pineado a una versión concreta para reproducibilidad.
+FROM debian:12-slim
+
+ARG VELO_VERSION=0.77.2
+ARG VELO_ARCH=linux-amd64
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+        ca-certificates curl && rm -rf /var/lib/apt/lists/*
+
+RUN curl -sL -o /usr/local/bin/velociraptor \
+      "https://github.com/Velocidex/velociraptor/releases/download/v${VELO_VERSION}/velociraptor-v${VELO_VERSION}-${VELO_ARCH}" \
+    && chmod +x /usr/local/bin/velociraptor
+
+WORKDIR /velo
+# El comando concreto (frontend/gui o client) lo fija docker-compose.
+ENTRYPOINT ["/usr/local/bin/velociraptor"]

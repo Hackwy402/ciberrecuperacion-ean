@@ -1,0 +1,11 @@
+# Datos generados del lab (no versionar)
+datasets/caso5/
+
+# Python
+__pycache__/
+*.pyc
+
+# Despliegue EC2 (secretos y datos, no versionar)
+despliegue-ec2/credenciales_alumnos.csv
+despliegue-ec2/.env
+despliegue-ec2/data/

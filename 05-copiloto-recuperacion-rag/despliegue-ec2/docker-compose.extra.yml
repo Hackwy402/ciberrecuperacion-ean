@@ -1,0 +1,82 @@
+# =====================================================================
+#  Servicios extra del SOC del curso (Sesión 5 · 92-EAN)
+#  Se suman a Wazuh single-node: Velociraptor (DFIR) + MinIO (bóveda WORM)
+#  + endpoint víctima. amd64 (EC2). Levantar con: bash setup.sh
+#
+#  Credenciales desde .env (copiar de .env.example). NUNCA en producción real.
+# =====================================================================
+
+services:
+  # --- Bóveda WORM (la misma idea de la Sesión 4) ----------------------
+  minio:
+    image: minio/minio:latest
+    container_name: cr-minio
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: "${MINIO_ROOT_USER}"
+      MINIO_ROOT_PASSWORD: "${MINIO_ROOT_PASSWORD}"
+      # Audit-log de MinIO hacia el colector que Wazuh monitorea (paso 5 del README)
+      MINIO_AUDIT_WEBHOOK_ENABLE_wazuh: "on"
+      MINIO_AUDIT_WEBHOOK_ENDPOINT_wazuh: "http://audit-collector:8080/audit"
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    volumes:
+      - ./data/minio:/data
+    restart: unless-stopped
+
+  # Colector minúsculo: recibe el audit-log de MinIO por HTTP y lo escribe a un
+  # archivo JSON que el manager de Wazuh monitorea (bind-mount compartido).
+  audit-collector:
+    image: python:3.11-slim
+    container_name: cr-audit-collector
+    command: >
+      python3 -c "
+      import http.server, json, socketserver
+      f = open('/salida/minio-audit.json', 'a', buffering=1)
+      class H(http.server.BaseHTTPRequestHandler):
+          def do_POST(self):
+              n = int(self.headers.get('Content-Length', 0))
+              f.write(self.rfile.read(n).decode('utf-8', 'replace') + '\n')
+              self.send_response(200); self.end_headers()
+          def log_message(self, *a): pass
+      socketserver.TCPServer(('', 8080), H).serve_forever()
+      "
+    volumes:
+      - ./data/wazuh-logs:/salida
+    restart: unless-stopped
+
+  # --- Servidor Velociraptor (GUI + frontend) --------------------------
+  velociraptor-server:
+    build:
+      context: .
+      dockerfile: Dockerfile.velociraptor
+    container_name: cr-velo-server
+    command: ["--config", "/velo/server.config.yaml", "frontend", "-v"]
+    ports:
+      - "8889:8889"       # GUI web
+      - "8000:8000"       # frontend (enrolamiento de clientes)
+    volumes:
+      - ./velo-config:/velo
+      - ./data/velo:/velo/datastore
+    restart: unless-stopped
+
+  # --- Endpoint VÍCTIMA: cliente Velociraptor + backups "infectados" ---
+  # Es el host que los alumnos investigan por hunting. No ejecuta malware:
+  # trae archivos de muestra (uno cifrado .locked3d, la nota de rescate).
+  victima:
+    build:
+      context: .
+      dockerfile: Dockerfile.velociraptor
+    container_name: cr-victima
+    command: ["--config", "/velo/client.config.yaml", "client", "-v"]
+    volumes:
+      - ./velo-config:/velo
+      - ./victima/evidencia:/evidencia:ro
+    depends_on:
+      - velociraptor-server
+    restart: unless-stopped
+
+networks:
+  default:
+    name: soc-curso            # red compartida; el setup conecta Wazuh aquí

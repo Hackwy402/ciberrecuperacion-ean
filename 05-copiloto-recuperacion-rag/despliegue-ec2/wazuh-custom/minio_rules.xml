@@ -1,0 +1,30 @@
+<!--
+  Reglas MinIO (bóveda WORM) para el lab 92-EAN (Sesión 5).
+  Disparan sobre el audit-log de MinIO (JSON) que el colector escribe en
+  /var/log/minio-audit/minio-audit.json y Wazuh monitorea. El SIEM ALERTA del
+  intento de manipular la bóveda; el Object Lock (WORM) es lo que la protege.
+-->
+<group name="minio,boveda,worm,">
+
+  <!-- Intento de BORRADO en la bóveda inmutable: anti-recuperación (T1490) -->
+  <rule id="100231" level="12">
+    <decoded_as>json</decoded_as>
+    <field name="api.name" type="pcre2">(?i)delete</field>
+    <field name="api.bucket" type="pcre2">^(boveda|alumno\d+)$</field>
+    <description>MinIO WORM: intento de BORRADO en la bóveda inmutable (objeto $(api.object))</description>
+    <mitre>
+      <id>T1490</id>
+    </mitre>
+    <group>attack,impact,</group>
+  </rule>
+
+  <!-- Backup depositado en la bóveda: informativo -->
+  <rule id="100232" level="3">
+    <decoded_as>json</decoded_as>
+    <field name="api.name" type="pcre2">(?i)putobject</field>
+    <field name="api.bucket" type="pcre2">^(boveda|alumno\d+)$</field>
+    <description>MinIO: backup depositado en la bóveda ($(api.object))</description>
+    <group>minio,</group>
+  </rule>
+
+</group>

@@ -1,0 +1,93 @@
+<!--
+  Reglas locales Locked3D para el lab 92-EAN (Sesión 5).
+  Disparan sobre los eventos Sysmon-style inyectados (dataset/eventos_locked3d.json,
+  leídos como localfile 'json'). Mapeadas a MITRE ATT&CK — las mismas TTPs de la
+  Sesión 3 (YARA/Sigma), ahora como alertas de SIEM que el alumno investiga.
+
+  Grupo base: los eventos JSON entran por el decoder json (id 5000 aprox). Aquí
+  clasificamos por CommandLine / campos. Ajusta el rango de IDs si colisiona.
+-->
+<group name="locked3d,ransomware,">
+
+  <!-- Borrado de shadow copies: anti-recuperación (T1490) -->
+  <rule id="100210" level="12">
+    <field name="win.eventdata.commandLine" type="pcre2">(?i)vssadmin.*delete.*shadows</field>
+    <description>Locked3D: borrado de shadow copies (anti-recuperación) en $(win.eventdata.image)</description>
+    <mitre>
+      <id>T1490</id>
+    </mitre>
+    <group>attack,impact,</group>
+  </rule>
+
+  <!-- Deshabilitar recuperación de arranque (T1490) -->
+  <rule id="100211" level="10">
+    <field name="win.eventdata.commandLine" type="pcre2">(?i)bcdedit.*recoveryenabled\s+no</field>
+    <description>Locked3D: recuperación de Windows deshabilitada (bcdedit)</description>
+    <mitre>
+      <id>T1490</id>
+    </mitre>
+    <group>attack,impact,</group>
+  </rule>
+
+  <!-- Limpieza de logs de eventos: anti-forense (T1070.001) -->
+  <rule id="100212" level="10">
+    <field name="win.eventdata.commandLine" type="pcre2">(?i)wevtutil\s+cl\s</field>
+    <description>Locked3D: limpieza de logs de eventos (anti-forense) - $(win.eventdata.commandLine)</description>
+    <mitre>
+      <id>T1070.001</id>
+    </mitre>
+    <group>attack,defense_evasion,</group>
+  </rule>
+
+  <!-- PowerShell ofuscado (T1059.001) -->
+  <rule id="100213" level="9">
+    <field name="win.eventdata.commandLine" type="pcre2">(?i)powershell.*-nop.*-w\s+hidden.*-enc</field>
+    <description>Locked3D: PowerShell ofuscado (-enc) lanzado desde Office</description>
+    <mitre>
+      <id>T1059.001</id>
+      <id>T1204.002</id>
+    </mitre>
+    <group>attack,execution,</group>
+  </rule>
+
+  <!-- Payload desde %TEMP% (T1204) -->
+  <rule id="100214" level="8">
+    <field name="win.eventdata.image" type="pcre2">(?i)\\AppData\\Local\\Temp\\l3d_core\.exe</field>
+    <description>Locked3D: payload l3d_core.exe ejecutado desde %TEMP%</description>
+    <mitre>
+      <id>T1204.002</id>
+    </mitre>
+    <group>attack,execution,</group>
+  </rule>
+
+  <!-- Archivos cifrados con extensión .locked3d (T1486) -->
+  <rule id="100215" level="12">
+    <field name="win.eventdata.targetFilename" type="pcre2">(?i)\.locked3d$</field>
+    <description>Locked3D: archivo cifrado creado ($(win.eventdata.targetFilename)) - CIFRADO EN CURSO</description>
+    <mitre>
+      <id>T1486</id>
+    </mitre>
+    <group>attack,impact,</group>
+  </rule>
+
+  <!-- Nota de rescate (T1486) -->
+  <rule id="100216" level="10">
+    <field name="win.eventdata.targetFilename" type="pcre2">(?i)LEEME_RESCATE\.txt$</field>
+    <description>Locked3D: nota de rescate LEEME_RESCATE.txt depositada</description>
+    <mitre>
+      <id>T1486</id>
+    </mitre>
+    <group>attack,impact,</group>
+  </rule>
+
+  <!-- Conexión a infraestructura de pago .onion (T1071/T1573) -->
+  <rule id="100217" level="11">
+    <field name="win.eventdata.destinationHostname" type="pcre2">(?i)\.onion$</field>
+    <description>Locked3D: conexión a dominio .onion ($(win.eventdata.destinationHostname))</description>
+    <mitre>
+      <id>T1071</id>
+    </mitre>
+    <group>attack,command_and_control,</group>
+  </rule>
+
+</group>
