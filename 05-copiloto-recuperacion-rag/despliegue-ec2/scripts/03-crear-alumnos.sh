@@ -56,7 +56,7 @@ for i in $(seq -w 1 "$N"); do
     mc admin policy attach local pol-$U --user $U >/dev/null 2>&1 || true
   "
 
-  echo "$U,$PW,https://$HOST,https://$HOST:9001,$U,$U" >> "$CSV"
+  echo "$U,$PW,https://$HOST,http://$HOST:9001,$U,$U" >> "$CSV"
   echo "   + $U"
 done
 

@@ -93,5 +93,5 @@ else echo "   localfile minio ya existía"; fi
 
 systemctl restart wazuh-manager
 sleep 40
-echo "==> Listo. MinIO consola: https://<IP>:9001  (usuario $MINIO_USER)"
+echo "==> Listo. MinIO consola: http://<IP>:9001  (usuario $MINIO_USER)"
 echo "    Prueba: borra algo en 'boveda' y busca en el dashboard rule.id: 100231"

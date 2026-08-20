@@ -12,7 +12,7 @@ Herramientas: **MinIO** (tu bóveda) + **Wazuh** (monitoreo), por navegador.
 Entra a la **consola de MinIO** con tu usuario (del CSV que te dio el docente):
 
 ```
-https://<IP-del-SOC>:9001     usuario: alumnoNN     clave: EanSOC2026-xxxx
+http://<IP-del-SOC>:9001     usuario: alumnoNN     clave: EanSOC2026-xxxx
 ```
 
 Verás **solo tu bucket** (`alumnoNN`) — es tu bóveda con Object Lock (WORM). Sube un
